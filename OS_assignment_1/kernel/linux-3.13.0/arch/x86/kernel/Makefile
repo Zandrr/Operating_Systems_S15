@@ -113,7 +113,8 @@ obj-$(CONFIG_EFI)			+= sysfb_efi.o
 obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o
 obj-$(CONFIG_TRACING)			+= tracepoint.o
 ###NEW SYS_CALL
-obj-y							+=helloworld.o
+obj-y							+= helloworld.o
+obj-y 							+= simple_add.o
 ###
 # 64 bit specific files
 ifeq ($(CONFIG_X86_64),y)

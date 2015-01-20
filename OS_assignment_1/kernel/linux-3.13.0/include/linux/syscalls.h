@@ -850,4 +850,5 @@ asmlinkage long sys_finit_module(int fd, const char __user *uargs, int flags);
 asmlinkage long sys_seccomp(unsigned int op, unsigned int flags,
 			    const char __user *uargs);
 asmlinkage long sys_helloworld(void);
+asmlinkage long sys_simple_add(int number1, int number2, int *result);
 #endif
