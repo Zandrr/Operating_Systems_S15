@@ -39,3 +39,18 @@ Check queue for memory leaks:
 
 Run pthread-hello
  ./pthread-hello
+
+ ------Alex Campbell Code------
+Build:
+ make
+
+Clean:
+ make clean
+
+Run multi-lookup
+./multi_lookup input/names*.txt output.txt
+
+Check queue for memory leaks:
+ valgrind ./multi_lookup input/names*.txt output.txt
+
+EXTRA CREDIT: Match Threads with number of cores in computer
