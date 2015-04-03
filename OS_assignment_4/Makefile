@@ -12,9 +12,12 @@ INPUTBLOCKS = $(shell echo $(INPUTFILESIZEBYTES)\/$(INPUTBLOCKSIZEBYTES) | bc)
 
 .PHONY: all clean
 
-all: pi pi-sched rw rw-sched pi-rw-sched
+all: pi pi-sched rw rw-sched pi-rw-sched forker
 
 pi: pi.o
+	$(CC) $(LFLAGS) $^ -o $@ -lm
+
+forker: forker.o
 	$(CC) $(LFLAGS) $^ -o $@ -lm
 
 pi-sched: pi-sched.o
@@ -30,6 +33,9 @@ pi-rw-sched: pi-rw-sched.o
 	$(CC) $(LFLAGS) $^ -o $@ -lm
 
 pi.o: pi.c
+	$(CC) $(CFLAGS) $<
+
+forker.o: forker.c
 	$(CC) $(CFLAGS) $<
 
 pi-sched.o: pi-sched.c
@@ -51,7 +57,7 @@ rwinput: Makefile
 # 	$(CC) $(CFLAGS) $<
 
 clean: testclean
-	rm -f pi pi-sched rw rw-sched pi-rw-sched
+	rm -f pi pi-sched rw rw-sched pi-rw-sched forker
 	rm -f rwinput
 	rm -f *.o
 	rm -f *~
