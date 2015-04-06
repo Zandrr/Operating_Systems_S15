@@ -53,9 +53,6 @@ rw.o: rw.c
 rwinput: Makefile
 	dd if=/dev/urandom of=./rwinput bs=$(INPUTBLOCKSIZEBYTES) count=$(INPUTBLOCKS)
 
-# rr_quantum.o: rr_quantum.c
-# 	$(CC) $(CFLAGS) $<
-
 clean: testclean
 	rm -f pi pi-sched rw rw-sched pi-rw-sched forker
 	rm -f rwinput

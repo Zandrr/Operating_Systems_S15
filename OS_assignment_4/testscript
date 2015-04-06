@@ -1,18 +1,6 @@
 #/!/bin/bash
 
-#File: testscript
-#Author: Andy Sayler
-#Project: CSCI 3753 Programming Assignment 3
-#Create Date: 2012/03/09
-#Modify Date: 2012/03/21
-#Description:
-#	A simple bash script to run a signle copy of each test case
-#	and gather the relevent data.
-
-ITERATIONS=100000000
-BYTESTOCOPY=102400
-BLOCKSIZE=1024
-TIMEFORMAT="wall=%e user=%U system=%S CPU=%P i-switched=%c v-switched=%w"
+TIMEFORMAT="%e, %U, %S, %P, %c, %w"
 MAKE="make -s"
 
 echo Building code...
@@ -21,15 +9,191 @@ $MAKE
 
 echo Starting test runs...
 
-echo Calculating pi over $ITERATIONS iterations using SCHED_OTHER with 1 simultaneous process...
-/usr/bin/time -f "$TIMEFORMAT" ./pi-sched $ITERATIONS SCHED_OTHER > /dev/null
+echo Running SCHED_RR CPU BOUND with 10 processes
 
-echo Calculating pi over $ITERATIONS iterations using SCHED_FIFO with 1 simultaneous process...
-/usr/bin/time -f "$TIMEFORMAT" sudo ./pi-sched $ITERATIONS SCHED_FIFO > /dev/null
+echo "SCHED_RR CPU BOUND 10 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-sched 10 SCHED_RR > /dev/null) 2>&1) >> data.txt
+done
 
-echo Calculating pi over $ITERATIONS iterations using SCHED_RR with 1 simultaneous process...
-/usr/bin/time -f "$TIMEFORMAT" sudo ./pi-sched $ITERATIONS SCHED_RR > /dev/null
 
-echo Copying $BYTESTOCOPY bytes in blocks of $BLOCKSIZE from rwinput to rwoutput
-echo using SCHED_OTHER with 1 simultaneous process...
-/usr/bin/time -f "$TIMEFORMAT" ./rw $BYTESTOCOPY $BLOCKSIZE > /dev/null
+echo Running SCHED_RR CPU BOUND with 100 processes
+echo "SCHED_RR CPU BOUND 100 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-sched 100 SCHED_RR > /dev/null) 2>&1) >> data.txt
+done
+echo Running SCHED_RR CPU BOUND with 1000 processes
+echo "SCHED_RR CPU BOUND 1000 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-sched 1000 SCHED_RR > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_RR IO BOUND with 10 processes
+
+echo "SCHED_RR IO BOUND 10 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker rw-sched 10 SCHED_RR > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_RR IO BOUND with 100 processes
+echo "SCHED_RR IO BOUND 100 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker rw-sched 100 SCHED_RR > /dev/null) 2>&1) >> data.txt
+done
+echo Running SCHED_RR IO BOUND with 1000 processes
+echo "SCHED_RR IO BOUND 1000 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker rw-sched 1000 SCHED_RR > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_RR MIXED with 10 processes
+
+echo "SCHED_RR MIXED 10 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-rw-sched 10 SCHED_RR > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_RR MIXED with 100 processes
+echo "SCHED_RR MIXED 100 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-rw-sched 100 SCHED_RR > /dev/null) 2>&1) >> data.txt
+done
+echo Running SCHED_RR MIXED with 1000 processes
+echo "SCHED_RR MIXED 1000 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-rw-sched 1000 SCHED_RR > /dev/null) 2>&1) >> data.txt
+done
+echo Running SCHED_FIFO CPU BOUND with 10 processes
+
+echo "SCHED_FIFO CPU BOUND 10 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-sched 10 SCHED_FIFO > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_FIFO CPU BOUND with 100 processes
+echo "SCHED_FIFO CPU BOUND 100 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-sched 100 SCHED_FIFO > /dev/null) 2>&1) >> data.txt
+done
+echo Running SCHED_FIFO CPU BOUND with 1000 processes
+echo "SCHED_FIFO CPU BOUND 1000 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-sched 1000 SCHED_FIFO > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_FIFO IO BOUND with 10 processes
+
+echo "SCHED_FIFO IO BOUND 10 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker rw-sched 10 SCHED_FIFO > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_FIFO IO BOUND with 100 processes
+echo "SCHED_FIFO IO BOUND 100 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker rw-sched 100 SCHED_FIFO > /dev/null) 2>&1) >> data.txt
+done
+echo Running SCHED_FIFO IO BOUND with 1000 processes
+echo "SCHED_FIFO IO BOUND 1000 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker rw-sched 1000 SCHED_FIFO > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_FIFO MIXED with 10 processes
+
+echo "SCHED_FIFO MIXED 10 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-rw-sched 10 SCHED_FIFO > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_FIFO MIXED with 100 processes
+echo "SCHED_FIFO MIXED 100 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-rw-sched 100 SCHED_FIFO > /dev/null) 2>&1) >> data.txt
+done
+echo Running SCHED_FIFO MIXED with 1000 processes
+echo "SCHED_FIFO MIXED 1000 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-rw-sched 1000 SCHED_FIFO > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_OTHER CPU BOUND with 10 processes
+
+echo "SCHED_OTHER CPU BOUND 10 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-sched 10 SCHED_OTHER > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_OTHER CPU BOUND with 100 processes
+echo "SCHED_OTHER CPU BOUND 100 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-sched 100 SCHED_OTHER > /dev/null) 2>&1) >> data.txt
+done
+echo Running SCHED_OTHER CPU BOUND with 1000 processes
+echo "SCHED_OTHER CPU BOUND 1000 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-sched 1000 SCHED_OTHER > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_OTHER IO BOUND with 10 processes
+
+echo "SCHED_OTHER IO BOUND 10 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker rw-sched 10 SCHED_OTHER > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_OTHER IO BOUND with 100 processes
+echo "SCHED_OTHER IO BOUND 100 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker rw-sched 100 SCHED_OTHER > /dev/null) 2>&1) >> data.txt
+done
+echo Running SCHED_OTHER IO BOUND with 1000 processes
+echo "SCHED_OTHER IO BOUND 1000 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker rw-sched 1000 SCHED_OTHER > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_OTHER MIXED with 10 processes
+
+echo "SCHED_OTHER MIXED 10 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-rw-sched 10 SCHED_OTHER > /dev/null) 2>&1) >> data.txt
+done
+
+echo Running SCHED_OTHER MIXED with 100 processes
+echo "SCHED_OTHER MIXED 100 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-rw-sched 100 SCHED_OTHER > /dev/null) 2>&1) >> data.txt
+done
+echo Running SCHED_OTHER MIXED with 1000 processes
+echo "SCHED_OTHER MIXED 1000 PROCESSES:" >> data.txt
+for i in 1 2 3 4 5
+do
+((/usr/bin/time -f "$TIMEFORMAT" ./forker pi-rw-sched 1000 SCHED_OTHER > /dev/null) 2>&1) >> data.txt
+done
