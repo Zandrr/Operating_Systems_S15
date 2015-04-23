@@ -71,6 +71,9 @@ Mount fusexmp on existing directory and list (ls) mirrored root directory (/)
 Unmount a FUSE filesystem
  fusermount -u <Mount Point>
 
+Mount pa5-encfs.c
+  ./pa5-encfs <key-phrase> <mirror-dir> <mount-point> [options]
+
 ***OpenSSL Examples***
 
 Copy FileA to FileB:

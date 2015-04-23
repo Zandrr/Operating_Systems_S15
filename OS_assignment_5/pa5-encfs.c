@@ -40,10 +40,6 @@ static void appendPath(char newPath[PATH_MAX], const char* path){
 	strncat(newPath, path, PATH_MAX);
 }
 
-static void temporaryPath(char newPath[PATH_MAX], char tempPath[PATH_MAX]){
-	strcpy(tempPath, newPath);
-	strncat(tempPath, ".xmp_tmp", PATH_MAX);
-}
 
 static int xmp_getattr(const char *path, struct stat *stbuf)
 {
@@ -441,20 +437,8 @@ static int xmp_release(const char *path, struct fuse_file_info *fi)
 	/* Just a stub.	 This method is optional and can safely be left
 	   unimplemented */
 
-
 	(void) fi;
-
-	char newPath[PATH_MAX];
-	appendPath(newPath, path);
-
-	char tempPath[PATH_MAX];
-	temporaryPath(newPath, tempPath);
-
-	int res;
-
-	res = unlink(tempPath);
-	if (res == -1)
-		return -errno;
+	(void) path;
 
 	return 0;
 }
